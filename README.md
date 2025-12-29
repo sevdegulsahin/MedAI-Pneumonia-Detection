@@ -1,93 +1,76 @@
 # MedAI: Derin Öğrenme ve Açıklanabilir Yapay Zeka (XAI) ile Zatürre Teşhis Sistemi
 
-MedAI, pediatrik göğüs röntgeni (Chest X-Ray) görüntülerinden otomatik olarak **Zatürre (Pneumonia)** teşhisi koyabilen, **%99.4 Recall (Duyarlılık)** başarısına sahip bir derin öğrenme tabanlı tıbbi karar destek sistemidir.
+MedAI, pediatrik göğüs röntgeni (Chest X-Ray) görüntülerinden otomatik olarak **Zatürre (Pneumonia)** teşhisi koyabilen, **%99.4 Recall (Duyarlılık)** başarısına sahip derin öğrenme tabanlı bir tıbbi karar destek sistemidir.
 
-Bu proje, tıbbi kararların şeffaflığını artırmak amacıyla **Açıklanabilir Yapay Zeka (Explainable AI - XAI)** tekniklerini kullanmakta ve özgün olarak geliştirilen **MedAI_DeepCNN** mimarisini endüstri standardı olan **ResNet18** modeli ile karşılaştırmalı olarak analiz etmektedir.
+Bu çalışma, tıbbi teşhis süreçlerinde şeffaflık sağlamak amacıyla **Açıklanabilir Yapay Zeka (XAI)** tekniklerini entegre eder ve özgün olarak geliştirilen **MedAI_DeepCNN** mimarisini endüstri standardı **ResNet18** modeli ile karşılaştırmalı olarak analiz eder.
 
 ---
 
 ## Proje Bağlantıları
 
-- Canlı Uygulama (Hugging Face Spaces): [MedAI-Pneumonia-Diagnosis](https://huggingface.co/spaces/sevdegulsahin/MedAI-Pneumonia-Diagnosis)
-- Veri Seti: [Kaggle Chest X-Ray Dataset](https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia)
+- **Canlı Uygulama (Hugging Face Spaces):** [MedAI-Pneumonia-Diagnosis](https://huggingface.co/spaces/sevdegulsahin/MedAI-Pneumonia-Diagnosis)
+- **Veri Seti:** [Kaggle Chest X-Ray Dataset](https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia)
 
 ---
 
 ## 1. Mimari Karşılaştırma: MedAI_DeepCNN vs. ResNet18
 
-Proje kapsamında iki farklı derin öğrenme yaklaşımı değerlendirilmiştir:
+Proje kapsamında iki farklı derin öğrenme yaklaşımı klinik performans açısından değerlendirilmiştir:
 
 ### MedAI_DeepCNN (Özgün Mimari)
-- Gri tonlamalı tıbbi görüntülerin doku özelliklerini yakalamak üzere özel olarak tasarlanmış, **4 katmanlı konvolüsyonel sinir ağı** mimarisidir.
-- **AdamW** optimizasyon algoritması kullanılmıştır.
-- Maksimum **%97.96 eğitim doğruluğu** elde edilmiştir.
+- Tıbbi görüntülerin spesifik doku özelliklerini yakalamak üzere optimize edilmiş, **4 katmanlı konvolüsyonel sinir ağı (CNN)** mimarisidir.
+- **AdamW** optimizasyon algoritması kullanılarak eğitilmiştir.
+- Eğitim sürecinde maksimum **%97.96 doğruluk** oranına ulaşmıştır.
 
 ### ResNet18 (Transfer Learning)
-- Derin ağlarda görülen **kaybolan gradyan** problemini çözmek için **Residual (Artık) Bağlantılar** kullanır.
-- **ImageNet** veri seti üzerinde önceden eğitilmiştir.
-- Eğitim süreci daha stabil ilerlemiş, özgün mimari ile rekabetçi sınıflandırma sonuçları üretmiştir.
+- Derin ağlardaki gradyan kaybı problemini aşmak için **Residual (Artık) Bağlantılar** kullanan önceden eğitilmiş bir mimaridir.
+- Eğitim sürecinde daha stabil bir öğrenme eğrisi sergilemiş, özgün mimari ile rekabetçi sonuçlar üretmiştir.
 
 ---
 
-## Mimari Karşılaştırma Tablosu
+## 2. Teknik Karşılaştırma ve Performans Analizi
 
-Modellerin performans metrikleri ve dosya çıktıları aşağıda detaylandırılmıştır:
+Modellerin 10 epoch süren eğitim süreci sonunda elde edilen nihai metrikleri ve dosya çıktıları aşağıda özetlenmiştir:
 
 | Özellik / Metrik | MedAI_DeepCNN (Özgün) | ResNet18 (Baseline) |
 | :--- | :--- | :--- |
-| **Eğitim Doğruluğu (Max)** | %97.96 | ~%98.8 |
-| **Eğitim Kaybı (Min)** | ~0.08 | ~0.03 |
-| **Ağırlık Dosyası** | best_MedAI_DeepCNN.pth | best_ResNet18.pth |
-| **Hata Matrisi** | confusion_matrix_MedAI_CNN.png | confusion_matrix_ResNet18.png |
-| **Metrik Raporu** | rapor_MedAI_CNN.txt | rapor_ResNet18.txt |
+| **Maksimum Eğitim Doğruluğu** | %97.96 | ~%98.8 |
+| **Minimum Eğitim Kaybı (Loss)** | ~0.08 | ~0.03 |
+| **Zatürre Sınıfı Duyarlılığı (Recall)** | **%99.4** | **%100.0** |
+| **Model Ağırlık Dosyası** | `best_MedAI_DeepCNN.pth` | `best_ResNet18.pth` |
+| **Performans Raporu** | `rapor_MedAI_CNN.txt` | `rapor_ResNet18.txt` |
+
+### Eğitim Dinamikleri Analizi
+* **Öğrenme İstikrarı:** ResNet18 modeli eğitim boyunca %97-99 aralığında stabil bir seyir izlerken; MedAI_DeepCNN modeli başlangıçta dalgalanmalar yaşamış, 6. epoch itibarıyla %97 bandında kararlılığa ulaşmıştır.
+* **Hata Minimizasyonu:** Her iki modelde de kayıp (loss) değerleri düzenli olarak azalmış; ResNet18 0.03, MedAI_DeepCNN ise 0.08 seviyesinde eğitimi tamamlamıştır.
 
 ---
 
-## 2. Açıklanabilir Yapay Zeka (XAI) Nedir?
+## 3. Açıklanabilir Yapay Zeka (XAI) ve Grad-CAM
 
-Geleneksel derin öğrenme modelleri genellikle **kara kutu (black-box)** olarak çalışır; yani verdikleri kararların nedenlerini açıklayamazlar. **Açıklanabilir Yapay Zeka (XAI)**, modelin karar verme mekanizmasını insanlar için anlaşılır hale getiren yöntemler bütünüdür.
+Modelin teşhis kararlarını tıbbi olarak doğrulanabilir kılmak için **Grad-CAM** algoritması entegre edilmiştir:
 
-### Grad-CAM Teknolojisi
-
-Bu projede XAI yöntemi olarak **Grad-CAM (Gradient-weighted Class Activation Mapping)** kullanılmıştır:
-
-- **Isı Haritası (Heatmap):** Modelin röntgen görüntüsü üzerinde hangi bölgelere odaklanarak "Pneumonia" kararı verdiğini görselleştirir.
-- **Klinik Doğrulama:** Hekimlerin, yapay zekanın işaretlediği alanları tıbbi patolojik bulgular (infiltrasyon, buzlu cam görünümü vb.) ile karşılaştırmasına imkân tanır.
-- **Güvenilirlik:** Model tahminlerinin rastgele değil, gerçek akciğer lezyonlarına dayandığını gösterir.
-
----
-
-## 3. Eğitim ve Performans Analizi
-
-Modeller, **10 epoch** boyunca eğitilmiş ve her aşamada performans metrikleri detaylı şekilde analiz edilmiştir.
-
-### Eğitim Dinamikleri
-
-- **Accuracy (Doğruluk):** ResNet18 modeli eğitim boyunca %97–99 aralığında oldukça stabil bir seyir izlemiştir. MedAI_DeepCNN modeli ise ilk epochlarda dalgalanmalar yaşamış, 6. epochtan sonra %97 seviyesinde kararlılığa ulaşmıştır.
-- **Loss (Kayıp):** Her iki modelde de kayıp değeri düzenli olarak azalmıştır. ResNet18 yaklaşık **0.03**, MedAI_DeepCNN ise yaklaşık **0.08** seviyesinde eğitimi tamamlamıştır.
-- **Kritik Klinik Metrik (Recall):** Zatürre sınıfı için **%99.4 Recall** elde edilmiştir.
-
+* **Görsel Kanıt:** Sistem, röntgen görüntüsü üzerinde patolojik bulguların (infiltrasyon, buzlu cam görünümü vb.) yoğunlaştığı alanları ısı haritası ile işaretler.
+* **Klinik Güven:** Model tahminlerinin rastgele piksellere değil, radyolojik olarak anlamlı lezyon bölgelerine dayandığı bu yöntemle kanıtlanır.
 
 ---
 
 ## 4. Modüler Proje Organizasyonu
 
-Proje, sürdürülebilir ve modüler bir dosya yapısı ile tasarlanmıştır:
+Proje, sürdürülebilir yazılım geliştirme prensiplerine uygun olarak tasarlanmıştır:
 
-- `model.py`: MedAI_DeepCNN ve ResNet18 mimarileri ile Grad-CAM algoritmalarını içerir.
-- `app.py`: Gradio tabanlı arayüz ile modelin canlı test edilmesini sağlar.
-- `train.py` & `eval.py`: Eğitim süreci ve performans değerlendirmelerini (Confusion Matrix, raporlar) yönetir.
-- `derin_ogrenme_rapor.pdf`: Projenin detaylı teknik raporu.
-- `requirements.txt`: Gerekli Python kütüphaneleri listesi.
-
----
-
-## 5. Gelecekte Yapılabilecek Çalışmalar (Future Work)
-
-- **Veri Dengesi:** Normal sınıfı için Recall oranını artırmak amacıyla veri artırma teknikleri çeşitlendirilebilir.
-- **Hibrit Modeller:** CNN katmanları ile Vision Transformer (ViT) blokları birleştirilerek global öznitelik çıkarımı güçlendirilebilir.
-- **Mobil Uygulama:** MobileNet gibi hafif mimariler kullanılarak model mobil cihazlara entegre edilebilir.
+* **`model.py`**: MedAI_DeepCNN ve ResNet18 mimarileri ile Grad-CAM algoritmalarının çekirdek tanımlarını içerir.
+* **`app.py`**: Gradio kütüphanesi ile geliştirilmiş, modelin canlı test edilmesine olanak sağlayan kullanıcı arayüzü.
+* **`train.py` & `eval.py`**: Eğitim döngüsünü ve performans değerlendirme raporlarını yöneten modüller.
+* **`derin_ogrenme_rapor.pdf`**: Projenin tüm metodolojik ve teknik detaylarını içeren akademik rapor.
 
 ---
 
-Bu çalışma, **Bilgisayar Mühendisliği – Derin Öğrenme Bitirme Projesi** kapsamında geliştirilmiştir.
+## 5. Gelecekte Yapılabilecek Çalışmalar
+
+* **Veri Dengesi:** Normal sınıfı başarımını artırmak için ileri düzey veri artırma (Data Augmentation) teknikleri.
+* **Hibrit Mimariler:** CNN mimarisine Vision Transformer (ViT) bloklarının entegre edilerek küresel bağlamın yakalanması.
+* **Mobil Uygulama:** Saha çalışanları için MobileNet veya benzeri hafif mimarilerle mobil cihaz entegrasyonu.
+
+---
+Bu proje, **Bilgisayar Mühendisliği – Derin Öğrenme Bitirme Çalışması** kapsamında geliştirilmiştir.
