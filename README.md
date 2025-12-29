@@ -67,7 +67,6 @@ Modeller, **10 epoch** boyunca eğitilmiş ve her aşamada performans metrikleri
 - **Loss (Kayıp):** Her iki modelde de kayıp değeri düzenli olarak azalmıştır. ResNet18 yaklaşık **0.03**, MedAI_DeepCNN ise yaklaşık **0.08** seviyesinde eğitimi tamamlamıştır.
 - **Kritik Klinik Metrik (Recall):** Zatürre sınıfı için **%99.4 Recall** elde edilmiştir.
 
-![Eğitim Grafikleri](Ekran Resmi 2026-12-29 22.19.48.png)
 
 ---
 
